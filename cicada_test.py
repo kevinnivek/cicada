@@ -11,7 +11,7 @@ def play_music(music_file):
         pg.mixer.music.load(music_file)
         print("Music file {} loaded!".format(music_file))
     except:
-        #print("File {} not found! {}".format(music_file, pg.get_error()))
+        print("File {} not found! {}".format(music_file, pg.get_error()))
         print "error"
         return
      
