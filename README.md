@@ -1,1 +1,1 @@
-# cicada
+# Summer Cicada Art Project
