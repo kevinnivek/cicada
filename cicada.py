@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 import sys
 import pygame as pg
 import os
@@ -12,7 +12,7 @@ def play_music(music_file):
         print("Music file {} loaded!".format(music_file))
     except:
         print("File {} not found! {}".format(music_file, pg.get_error()))
-        print "error"
+        print("error")
         return
      
     pg.mixer.music.play()
@@ -33,7 +33,7 @@ if len(sys.argv) > 2:
     try: 
         user_volume = float(sys.argv[2])
     except ValueError:
-        print "Volume argument invalid. Please use a float (0.0 - 1.0)"
+        print("Volume argument invalid. Please use a float (0.0 - 1.0)")
         pg.mixer.music.fadeout(1000)
         pg.mixer.music.stop()
         raise SystemExit
@@ -42,7 +42,7 @@ if len(sys.argv) > 2:
     pg.mixer.music.set_volume(user_volume)
      
     try:
-        print "playing " + sys.argv[1]
+        print("playing " + sys.argv[1])
         play_music(sys.argv[1])
         time.sleep(.25)
     except KeyboardInterrupt:
