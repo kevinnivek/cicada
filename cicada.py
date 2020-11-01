@@ -1,38 +1,55 @@
-# This script requires a Raspberry Pi 2, 3 or Zero. Circuit Python must
-# be installed and it is strongly recommended that you use the latest
-# release of Raspbian.
-     
-import time
+#!/usr/bin/python3
+import sys
+import pygame as pg
 import os
-import board
-import digitalio
+import time
      
-print("press a button!")
      
-button1 = digitalio.DigitalInOut(board.D23)
-button1.direction = digitalio.Direction.INPUT
-button1.pull = digitalio.Pull.UP
+def play_music(music_file):
+    clock = pg.time.Clock()
+    try:
+        pg.mixer.music.load(music_file)
+        print("Music file {} loaded!".format(music_file))
+    except:
+        print("File {} not found! {}".format(music_file, pg.get_error()))
+        print("error")
+        return
      
-button2 = digitalio.DigitalInOut(board.D24)
-button2.direction = digitalio.Direction.INPUT
-button2.pull = digitalio.Pull.UP
+    pg.mixer.music.play()
+        
+    while pg.mixer.music.get_busy():
+        clock.tick(30)
      
-button3 = digitalio.DigitalInOut(board.D25)
-button3.direction = digitalio.Direction.INPUT
-button3.pull = digitalio.Pull.UP
      
-while True:
+freq = 44100    # audio CD quality
+bitsize = -16   # unsigned 16 bit
+channels = 2    # 1 is mono, 2 is stereo
+buffer = 2048   # number of samples (experiment to get right sound)
+pg.mixer.init(freq, bitsize, channels, buffer)
      
-    # omxplayer -o local <file>
-    # omxplayer -o hdmi <file>
-    # omxplayer -o both <file>
-    if not button1.value:
-        os.system('omxplayer temple-bell.mp3 &')
      
-    if not button2.value:
-        os.system('omxplayer temple-bell-bigger.mp3 &')
+if len(sys.argv) > 2:
      
-    if not button3.value:
-        os.system('omxplayer temple-bell-huge.mp3 &')
-
-    time.sleep(.25)
+    try: 
+        user_volume = float(sys.argv[2])
+    except ValueError:
+        print("Volume argument invalid. Please use a float (0.0 - 1.0)")
+        pg.mixer.music.fadeout(1000)
+        pg.mixer.music.stop()
+        raise SystemExit
+     
+    print("Playing at volume: " + str(user_volume)+ "\n")
+    pg.mixer.music.set_volume(user_volume)
+     
+    try:
+        print("playing " + sys.argv[1])
+        play_music(sys.argv[1])
+        time.sleep(.25)
+    except KeyboardInterrupt:
+        # if user hits Ctrl/C then exit
+        # (works only in console mode)
+        pg.mixer.music.fadeout(1000)
+        pg.mixer.music.stop()
+        raise SystemExit
+else:
+    print("Please specify volume as a float! (0.0 - 1.0)")
