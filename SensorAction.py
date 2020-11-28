@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 
 import smbus
+import time,os
 
 bus = smbus.SMBus(1)
 
@@ -56,4 +57,6 @@ def set_timer(hours, minutes, seconds):
 #
 # Your sensor behaviour goes here
 #
-set_timer(0,0,10)
+os.system('sudo rmmod rtc_ds1307')
+set_timer(0,0,30)
+os.system('sudo modprobe rtc_ds1307')
