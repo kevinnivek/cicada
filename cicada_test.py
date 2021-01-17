@@ -28,10 +28,10 @@ buffer = 2048   # number of samples (experiment to get right sound)
 pg.mixer.init(freq, bitsize, channels, buffer)
      
      
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
      
     try: 
-        user_volume = float(sys.argv[1])
+        user_volume = float(sys.argv[2])
     except ValueError:
         print "Volume argument invalid. Please use a float (0.0 - 1.0)"
         pg.mixer.music.fadeout(1000)
@@ -40,23 +40,17 @@ if len(sys.argv) > 1:
      
     print("Playing at volume: " + str(user_volume)+ "\n")
     pg.mixer.music.set_volume(user_volume)
-    mp3s = []
-    for file in os.listdir("./audio"):
-        if file.endswith(".mp3"):
-            mp3s.append(file)
      
-    print mp3s
-     
-    for x in mp3s: 
-        try:
-            print "playing " + x
-            play_music(x)
-            time.sleep(.25)
-        except KeyboardInterrupt:
-            # if user hits Ctrl/C then exit
-            # (works only in console mode)
-            pg.mixer.music.fadeout(1000)
-            pg.mixer.music.stop()
-            raise SystemExit
+    try:
+        print "playing " + sys.argv[1]
+        play_music(sys.argv[1])
+        time.sleep(.25)
+    except KeyboardInterrupt:
+        # if user hits Ctrl/C then exit
+        # (works only in console mode)
+        pg.mixer.music.fadeout(1000)
+        pg.mixer.music.stop()
+        raise SystemExit
 else:
     print("Please specify volume as a float! (0.0 - 1.0)")
+
