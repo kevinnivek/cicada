@@ -90,7 +90,7 @@ buffer = 2048   # number of samples (experiment to get right sound)
 pg.mixer.init(freq, bitsize, channels, buffer)
      
      
-if len(sys.argv) > 3:
+if len(sys.argv) > 4:
      
     # Set volume based on user input
     try: 
@@ -118,12 +118,13 @@ if len(sys.argv) > 3:
     
     # Set the RTC clock to power off/on based on user input
     try:
-        os.system('sudo rmmod rtc_ds1307')
-        set_timer(sys.argv[3],sys.argv[4],sys.argv[5])
-        os.system('sudo modprobe rtc_ds1307')
+        with open('/home/pi/wittypi/schedule.wpi', 'w') as f:
+            f.write("BEGIN\t2021-08-05 00:00:00\nEND\t2035-07-31 23:59:59\nON\tM" + str(sys.argv[3]) + "\tWAIT\nOFF\tH" + str(sys.argv[4]))
+            f.close()
+        os.system('/bin/bash /home/pi/wittypi/runScript.sh')        
     except:
         print("An error occurred setting the RTC timer")
 else:
     print("Please specify volume as a float! (0.0 - 1.0)")
-    print("Command syntax : ./cicada.py <path to mp3 file> <volume: 0.0 - 1.0> <hours to sleep> <minutes to sleep> <seconds to sleep>")
+    print("Command syntax : ./cicada.py <path to mp3 file> <volume: 0.0 - 1.0> <minutes to sleep> <hours to sleep>")
 
